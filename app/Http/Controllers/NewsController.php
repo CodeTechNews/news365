@@ -105,15 +105,18 @@ class NewsController extends Controller
         $crawler = $this->scraping_url('https://www.noticias24mundo.com/');
         $crawler->filter('.container-fluid > div > div > div > div > div > article > div')->each(function ($node) use (&$i) {
             
-            $imagen = $node->filter('img')->attr('src');
-            $texto = $node->text();
-            $link =  $node->filter('a')->attr('href');
-            $this->news[] = [
-                'id'    => $i,
-                'image' => $imagen,
-                'text' => $texto,
-                'href'=> $link
-            ];
+            if ($i>0) {
+                $imagen = $node->filter('img')->attr('src');
+                $texto = $node->text();
+                $link =  $node->filter('a')->attr('href');
+                $this->news[] = [
+                    'id'    => $i,
+                    'image' => $imagen,
+                    'text' => $texto,
+                    'href'=> $link
+                ];
+            }
+            
             //$image_content = file_get_contents($imagen);
             //file_put_contents('images/' . $i . '.jpg', $image_content);
             $i++;
