@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container mx-auto px-24 pt-16">
+    <div class="container mx-auto px-4 pt-16">
         <div class="popular-news">
             <h2 class="uppercase tracking-wider text-orange-500 text-lg font-semibold">
                 Popular News
