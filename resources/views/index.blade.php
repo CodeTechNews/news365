@@ -2,7 +2,8 @@
 
 @section('content')
 
-    <div class="container mx-auto px-4 pt-16">
+    <div class="container mx-auto px-4 pt-2">
+        <marquee scrollamount="10">Bienvendos al portal de noticias 365</marquee>
         <div class="popular-news">
             <h2 class="uppercase tracking-wider text-orange-500 text-lg font-semibold">
                 Popular News
@@ -32,4 +33,5 @@
         </div>
     </div>
 @endsection
+
 
