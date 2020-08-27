@@ -215,6 +215,7 @@ class NewsController extends Controller
 
             $link = strip_tags($item->id);  //extrae el link
             $title = explode('"',$item->title)[0];  //extrae el titulo
+            $title = GoogleTranslate::trans($title, 'es');
             //dump($title);die;
 
             //Hago un split del string $datos empleando "explode" para encontrar url de imagen de la noticia
