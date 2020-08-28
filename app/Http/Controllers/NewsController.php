@@ -149,7 +149,7 @@ class NewsController extends Controller
             
             
             if ($i>0) {
-                $imagen = $node->filter('img')->attr('src');
+                $imagen = $node->filter('amp-img')->attr('src');
                 $texto = $node->text();
                 $link =  $node->filter('a')->attr('href');
                 $this->news[] = [
@@ -164,6 +164,7 @@ class NewsController extends Controller
             //file_put_contents('images/' . $i . '.jpg', $image_content);
             $i++;
         });
+        //dump($this->news);die;
         
         return $this->news;
     }
@@ -176,14 +177,18 @@ class NewsController extends Controller
     private function buscar_noticia($url_noticia){
 
         $texto = "";
+        $imagen = "";
         try {
             //$url_noticia = "https://www.eleconomista.com.mx/opinion/Monreal-obsesion-por-el-control-digital-20200703-0037.html";
             $crawler = $this->scraping_url($url_noticia);
             
-            $crawler->filter('p')->each(function ($node) use (&$texto){
+            $crawler->filter('p')->each(function ($node) use (&$texto, &$imagen){
                 
-                //$imagen = $node->filter('img')->attr('src');
+                //$imagen = $node->filter('amp-img')->attr('src');
+                //$imagen .= "<img src='". $imagen. "' alt=''>";
                 $texto .= $node->html() . "<br><br>";
+                //dump($imagen);die;
+
                 //$link =  $node->filter('a')->attr('href');
                 
                 //$image_content = file_get_contents($imagen);
@@ -201,6 +206,8 @@ class NewsController extends Controller
         catch  (\Exception $e){
             $traducido = $texto;
         }
+        //echo $traducido;die;
+        //dump($traducido);die;
         return $traducido;
     }
 
@@ -209,54 +216,60 @@ class NewsController extends Controller
         $i = 0; 
         $url = $feedURL; 
         $rss = simplexml_load_file($url); 
-        //dump($rss);
-        try { 
-        foreach($rss->entry as $item) { 
-
-            $link = strip_tags($item->id);  //extrae el link
-            $title = explode('"',$item->title)[0];  //extrae el titulo
-            $title = GoogleTranslate::trans($title, 'es');
-            //dump($title);die;
-
-            //Hago un split del string $datos empleando "explode" para encontrar url de imagen de la noticia
-            $datos = explode('<img alt="', $item->content);
-            
-            //dump(explode('"',$datos[1]));
-            //dump($datos);
-            
-            //Cargo una imagen por defecto sino se encuentra la de la noticia.
-            $imagen = "/img/news365.png";
-            
-            // Si encuentro en la posición 1 del array el string " src=" cargo la url de la imagen de la posición siguiente la 2
-            if (explode('"',$datos[1])[1] == " src=") {
-                $imagen = explode('"',$datos[1])[2];
-            }
-            // foreach ($datos as $dato){
+        $articles = $rss->entry;
+        // foreach($articles as $article){
+        //     echo $article->id . '<br>';
+        // }
+        // die;
+        
+        foreach($articles as $item) { 
+            try{
+                $link = strip_tags($item->id);  //extrae el link
+                $title = explode('"',$item->title)[0];  //extrae el titulo
+                $title = GoogleTranslate::trans($title, 'es');
+                //dump($title);die;
+    
+                //Hago un split del string $datos empleando "explode" para encontrar url de imagen de la noticia
+                $datos = explode('<img alt="', $item->content);
                 
-            //     if (strpos($dato,'src') == 1) {  
-            //         $imagen = explode('"',$dato)[2];
-            //         //dump($imagen);
-            //     }
-            // }
-            $autor = $item->author->name;
-            $date = $item->pubDate;  //extrae la fecha
-            $guid = $item->guid;  //extrae el link de la imagen
-            $description = strip_tags($item->description);  //extrae la descripcion
-            if (strlen($description) > 400) { //limita la descripcion a 400 caracteres
-            $stringCut = substr($description, 0, 200);                   
-            $description = substr($stringCut, 0, strrpos($stringCut, ' ')).'...';}
-
+                //dump(explode('"',$datos[1]));
+                //dump($datos);
+                
+                //Cargo una imagen por defecto sino se encuentra la de la noticia.
+                $imagen = "/img/news365.png";
+                
+                // Si encuentro en la posición 1 del array el string " src=" cargo la url de la imagen de la posición siguiente la 2
+                if (explode('"',$datos[1])[1] == " src=") {
+                    $imagen = explode('"',$datos[1])[2];
+                }
+                // foreach ($datos as $dato){
+                    
+                //     if (strpos($dato,'src') == 1) {  
+                //         $imagen = explode('"',$dato)[2];
+                //         //dump($imagen);
+                //     }
+                // }
+                // $autor = $item->author->name;
+                // $date = $item->pubDate;  //extrae la fecha
+                // $guid = $item->guid;  //extrae el link de la imagen
+                // $description = strip_tags($item->description);  //extrae la descripcion
+                // if (strlen($description) > 400) { //limita la descripcion a 400 caracteres
+                // $stringCut = substr($description, 0, 200);                   
+                // $description = substr($stringCut, 0, strrpos($stringCut, ' ')).'...';}
+                
+                
+            }
+            catch(\Exception $e) {
+                //echo $e->getMessage(); 
+                
+            }
             $news[] = [
                 'id'    => $i,
                 'image' => $imagen,
                 'text' => $title, //substr($texto,0,100) . '...',
                 'href'=> $link
             ];
-            
             $i++;
-        }
-        } catch(\Exception $e) {
-                
         }
         //die;
         return $news;    
