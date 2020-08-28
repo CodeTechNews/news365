@@ -57,7 +57,7 @@ class NewsController extends Controller
         $noticia=[
             'imagen' => $request->query('image'),
             'titulo' => $request->query('text'),
-            'texto' => $this->buscar_noticia($request->query('href'))
+            'texto' => $this->buscar_noticia($request->query('href'), $request->query('lang'))
         ];
 
         //dd($noticia[0]['imagen']);die;
@@ -104,14 +104,16 @@ class NewsController extends Controller
         $i = 0;
         $url = "";
         $filter = "";
+        $language = "es";
 
 
         switch ($news) {
             case "tech":
                 $url = "https://www.theverge.com/spacex";
                 $filter = ".c-compact-river__entry";
-                return $this->LeerRSS('https://www.theverge.com/rss/index.xml');
-                dump($this->LeerRSS('https://www.theverge.com/rss/index.xml'));
+                $language = "en";
+                return $this->LeerRSS('https://www.theverge.com/rss/index.xml', $language);
+                //dump($this->LeerRSS('https://www.theverge.com/rss/index.xml',$language));
                 die;
                 break;
             case "pol":
@@ -131,7 +133,7 @@ class NewsController extends Controller
         //$this->LeerRSS('https://www.theverge.com/rss/index.xml');
         //die;
        
-        $crawler->filter($filter)->each(function ($node) use (&$i) {
+        $crawler->filter($filter)->each(function ($node) use (&$i, &$language) {
             
             //echo $node->html();
             // try {
@@ -156,7 +158,8 @@ class NewsController extends Controller
                     'id'    => $i,
                     'image' => $imagen,
                     'text' => $texto, //substr($texto,0,100) . '...',
-                    'href'=> $link
+                    'href'=> $link,
+                    'lang' => $language
                 ];
             }
             
@@ -174,17 +177,19 @@ class NewsController extends Controller
         return $client->request('GET', $url);
     }
 
-    private function buscar_noticia($url_noticia){
+    private function buscar_noticia($url_noticia, $language){
 
         $texto = "";
-        $imagen = "";
+        
         try {
             //$url_noticia = "https://www.eleconomista.com.mx/opinion/Monreal-obsesion-por-el-control-digital-20200703-0037.html";
             $crawler = $this->scraping_url($url_noticia);
+
+            //$texto = $crawler->filter('article')->html();
             
-            $crawler->filter('p')->each(function ($node) use (&$texto, &$imagen){
+            $crawler->filter('p')->each(function ($node) use (&$texto){
                 
-                //$imagen = $node->filter('amp-img')->attr('src');
+                //$imagen = $node->filter('image-decoding')->attr('src');
                 //$imagen .= "<img src='". $imagen. "' alt=''>";
                 $texto .= $node->html() . "<br><br>";
                 //dump($imagen);die;
@@ -198,10 +203,14 @@ class NewsController extends Controller
             /* $texto = "<div class='containe mx-auto'><video controls>
             <source src='https://cxl.hlssrv.com/hls_serve_mp4/m7pePeG7SPc0Y51eXpCd.mp4?md5=dyTLUKi3zy3R0FjzErTkvQ&expires=1595027122' type='video/mp4'>
             <source src='movie.ogg' type='video/ogg'>
-        Your browser does not support the video tag.
-        </video></div>";
-        */  
-            $traducido = GoogleTranslate::trans($texto, 'es');
+            Your browser does not support the video tag.
+            </video></div>";
+            */  
+            //dump($language);
+            $traducido = $texto;
+            if ($language == "en") {
+                $traducido = GoogleTranslate::trans($texto, 'es');
+            }
         }
         catch  (\Exception $e){
             $traducido = $texto;
@@ -211,7 +220,7 @@ class NewsController extends Controller
         return $traducido;
     }
 
-    private function LeerRSS($feedURL){
+    private function LeerRSS($feedURL, $language){
 
         $i = 0; 
         $url = $feedURL; 
@@ -221,12 +230,15 @@ class NewsController extends Controller
         //     echo $article->id . '<br>';
         // }
         // die;
-        
+        //dump($language);
         foreach($articles as $item) { 
             try{
                 $link = strip_tags($item->id);  //extrae el link
                 $title = explode('"',$item->title)[0];  //extrae el titulo
-                $title = GoogleTranslate::trans($title, 'es');
+
+                if ($language == "en") {
+                    $title = GoogleTranslate::trans($title, 'es');
+                }
                 //dump($title);die;
     
                 //Hago un split del string $datos empleando "explode" para encontrar url de imagen de la noticia
@@ -267,7 +279,8 @@ class NewsController extends Controller
                 'id'    => $i,
                 'image' => $imagen,
                 'text' => $title, //substr($texto,0,100) . '...',
-                'href'=> $link
+                'href'=> $link,
+                'lang' => $language
             ];
             $i++;
         }
