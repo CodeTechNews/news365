@@ -2,6 +2,17 @@
 
 
 @section('content')
+    <style> 
+        #footer { 
+            position: fixed; 
+            padding: 10px 10px 0px 10px; 
+            bottom: 0; 
+            width: 100%; 
+            /* Height of the footer*/  
+            height: 40px; 
+            background: grey; 
+        } 
+    </style> 
     <div class="new-info border-b border-gray-800">
         <div class="container mx-auto px-4 py-16 flex flex-col md:flex-row">
             <img src="{{$noticia['imagen']}}" alt="" class=" sm:h-full md:h-32 lg:h-64  object-cover" >
@@ -15,5 +26,8 @@
                 </p>
             </div>
         </div>
+        <div id="footer">
+            <marquee scrollamount="10">Estamos en período de evaluación para el lanzamiento oficial de su canal web preferido "noticias 365"</marquee> 
+        </div> 
     </div>
 @endsection
