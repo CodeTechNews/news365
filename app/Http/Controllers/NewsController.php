@@ -112,15 +112,18 @@ class NewsController extends Controller
                 $url = "https://www.theverge.com/spacex";
                 $filter = ".c-compact-river__entry";
                 $language = "en";
-                return $this->LeerRSS('https://www.theverge.com/rss/index.xml', $language);
+                $articulos1 = $this->LeerRSS('https://www.theverge.com/rss/index.xml', $language);
+                $i = count($articulos1);
+                $articulos2 = $this->LeerAPI('https://app.scrapinghub.com/api/v2/datasets/JuCzQQh2IGh/download?format=json', "es", $i);
+                return array_merge($articulos1, $articulos2);
                 //dump($this->LeerRSS('https://www.theverge.com/rss/index.xml',$language));
                 die;
                 break;
             case "pol":
-                echo "i es igual a 1";
+                return $news=[];
                 break;
             case "fin":
-                echo "i es igual a 2";
+                return $news=[];
                 break;
             default:
                 $url = "https://www.noticias24mundo.com/";
@@ -218,6 +221,28 @@ class NewsController extends Controller
         //echo $traducido;die;
         //dump($traducido);die;
         return $traducido;
+    }
+
+    private function LeerAPI($url, $language, $i){
+        //dump($url);die;
+        $response = Http::get($url)->json();
+        foreach($response as $item){
+            $title = $item['title'];
+            if ($language == "en") {
+                $title = GoogleTranslate::trans($title, 'es');
+            }
+            $news[] = [
+                'id'    => $i,
+                'image' => $item['img'],
+                'text' => $title, //substr($texto,0,100) . '...',
+                'href'=> $item['url'],
+                'lang' => $language
+            ];
+            $i++;
+        }
+        //dump($news);die;
+        return $news;
+        //dump($response);
     }
 
     private function LeerRSS($feedURL, $language){

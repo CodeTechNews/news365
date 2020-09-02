@@ -44,10 +44,10 @@
                     <a href="/?news=tech" class="hover:text-gray-300">Tecnología</a>
                 </li>
                 <li class="md:ml-6 mt-3 md:mt-0">
-                    <a href="#" class="hover:text-gray-300">Política</a>
+                    <a href="/?news=pol" class="hover:text-gray-300">Política</a>
                 </li>
                 <li class="md:ml-6 mt-3 md:mt-0">
-                    <a href="#" class="hover:text-gray-300">Finanzas</a>
+                    <a href="/?news=fin" class="hover:text-gray-300">Finanzas</a>
                 </li>
             </ul>
                 <div class="flex flex-col md:flex-row items-center">
