@@ -1,0 +1,85 @@
+
+https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Odoltologos Playa del Carmen&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyBTy-SCuolM7qtHuQ39hiIHamckM6HXUQU
+
+
+https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
+
+
+https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyBTy-SCuolM7qtHuQ39hiIHamckM6HXUQU&location=20.6639989,-87.1009363&radius=5000&type=odontologo
+
+https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyBTy-SCuolM7qtHuQ39hiIHamckM6HXUQU&location=-33.8670522,151.1957362&radius=5000&type=restaurant
+
+
+https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJAQFbnzNDTo8Rt8UMoJlAbKc&key=AIzaSyBTy-SCuolM7qtHuQ39hiIHamckM6HXUQU
+
+
+Enviar mendaje por whatsapp
+https://api.whatsapp.com/send?phone=+529848031177
+
+
+$url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyBTy-SCuolM7qtHuQ39hiIHamckM6HXUQU&query=" . $query;
+        
+        $negocios = Http::get($url)->json();
+        //dump($negocios['results']);die;
+        foreach($negocios['results'] as $negocio){
+            
+            try {
+                $website = "No tiene";
+                $telefono = "xxx";
+                $reclamar = False;
+                $num_califica = 0;
+                $name = $negocio['name'];
+                $id = $negocio['place_id'];
+                //dump($name);
+                $url_details = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" . $id . "&key=AIzaSyBTy-SCuolM7qtHuQ39hiIHamckM6HXUQU";
+                $detalle = Http::get($url_details)->json();
+                $url = $detalle['result']['url'];
+                $direccion = $detalle['result']['formatted_address'];
+                $telefono = $detalle['result']['international_phone_number'];
+                $website = $detalle['result']['website'];
+                $num_califica = $detalle['result']['user_ratings_total'];
+                //dump($detalle['result']);die;
+                // $pagina = file_get_contents($url);
+                // if (strpos($pagina, 'Reclamar esta empresa') != 0){
+                //     $reclamar = True;
+                // }
+            }
+            catch(\Exception $e) {
+                //echo $e->getMessage(); 
+                
+            }
+            $empresas[] = [
+                'nombre'    => $name,
+                'direccion' => $direccion,
+                'telefono'=> $telefono,
+                'website'=> $website,
+                'id' => $id,
+                'Por_reclamar' => $reclamar, //substr($texto,0,100) . '...',
+                'url'=> $url,
+                'revisiones'=> $num_califica
+            ];          
+        }
+        dump($empresas);die;
+
+
+
+
+
+
+
+
+
+        // $crawler = $this->scraping_url($url);
+            // echo "uno"; dump($crawler);
+            // $url= "https://www.google.com/maps/place/DentalSPA,+Dentistas+en+Playa+del+Carmen,+10+avenida+nte+y+calle+1ra+Sur+Centro,+Calica,+77710+Playa+del+Carmen,+Q.R./@20.622406,-87.076704,17z/data=!4m2!3m1!1s0x8f4e433bfcbd3e31:0x8b20857403223375";
+            // $crawler = $this->scraping_url($url);
+            // echo "dos"; dump($crawler);die;
+            // //$extracto = $crawler->filterXPath('//*[@id="app"]/div[13]/div/div[1]/div/div/div[2]/div[13]/button/div/div[2]/div[1]');
+            // //dump($extracto);die;
+            // $texto = "Empieza aqui:";
+            
+            // $crawler->filter('.app > div')->each(function ($node) use (&$texto) {
+            //     $texto .= $node->text();
+            //     dump($node);
+            // });
+            // die;
