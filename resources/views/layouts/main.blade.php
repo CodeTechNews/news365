@@ -6,6 +6,7 @@
     <title>News App</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
+
 <style>
 #myBtn {
   display: none;

@@ -8,6 +8,7 @@ use Goutte\Client;
 use PhpParser\Node\Stmt\TryCatch;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
+
 class NewsController extends Controller
 {
     
@@ -267,7 +268,7 @@ class NewsController extends Controller
                 
                 //$imagen = $node->filter('image-decoding')->attr('src');
                 //$imagen .= "<img src='". $imagen. "' alt=''>";
-                $texto .= $node->html() . "<br><br>";
+                $texto .= $node->text() . "<br><br>";
                 //dump($imagen);die;
 
                 //$link =  $node->filter('a')->attr('href');
@@ -399,6 +400,7 @@ class NewsController extends Controller
         }
         dump($empresas);die;
     } 
+
 
     private function LeerRSS($feedURL, $language){
 
