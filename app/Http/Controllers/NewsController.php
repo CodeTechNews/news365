@@ -55,10 +55,15 @@ class NewsController extends Controller
     public function show(Request $request)
     {
         
+        $titulo = $request->query('text');
+        $language = $request->query('lang');
+        if ($language == "en") {
+            $titulo = GoogleTranslate::trans($titulo, 'es');
+        }
 
         $noticia=[
             'imagen' => $request->query('image'),
-            'titulo' => $request->query('text'),
+            'titulo' => $titulo,
             'texto' => $this->buscar_noticia($request->query('href'), $request->query('lang'))
         ];
 
@@ -121,6 +126,13 @@ class NewsController extends Controller
                 //dump($this->LeerRSS('https://www.theverge.com/rss/index.xml',$language));
                 die;
                 break;
+            case "inter":
+                // $this->BuscarNegocios("hamburguesas playa del carmen");
+                // die;
+                $domain = "http://35.215.215.65";
+                $articulos = $this->LeerAPI($domain . '/news/world/bbcmundo.json', "es", $i);
+                return $articulos;
+                break;    
             case "pol":
                 // $this->BuscarNegocios("hamburguesas playa del carmen");
                 // die;
@@ -134,11 +146,16 @@ class NewsController extends Controller
                 return $this->buscar_noticias($url, $filter, $language );
                 break;
             default:
-                $url = "https://www.noticias24mundo.com/";
+                $url = "https://www.noticias24.com/";
                 $filter = ".container-fluid > div > div > div > div > div > article";
         }
 
-        $crawler = $this->scraping_url($url);
+        try {
+            $crawler = $this->scraping_url($url);
+        } catch (\Throwable $th) {
+            return $this->news[]=[];
+        }
+        
         //dump($crawler->filter($filter)->html());die;
 
         //$this->LeerRSS('https://www.theverge.com/rss/index.xml');
@@ -204,6 +221,10 @@ class NewsController extends Controller
         return $this->news;
     }
 
+    private function json_noticias(){
+
+    }
+
     private function buscar_noticias($url, $filter, $language ){
 
         $crawler = $this->scraping_url($url);
@@ -250,8 +271,13 @@ class NewsController extends Controller
     }
 
     private function scraping_url($url){
-        $client = new Client();
-        return $client->request('GET', $url);
+        try {
+            $client = new Client();
+            return $client->request('GET', $url);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
     }
 
     private function buscar_noticia($url_noticia, $language){
@@ -298,13 +324,21 @@ class NewsController extends Controller
         return $traducido;
     }
 
-    private function LeerAPI($url, $language, $i){
+    private function LeerAPI($rute, $language, $i){
         //dump($url);die;
-        $response = Http::get($url)->json();
+      
+        $response = Http::get($rute)->json();
+
+        
+        $imagen = "img/news365.png";
         foreach($response as $item){
             $title = $item['title'];
             if ($language == "en") {
                 $title = GoogleTranslate::trans($title, 'es');
+            }
+            //dump($item['img']); 
+            if ($item['img'] == "null"){
+                $imagen = $item['img'];
             }
             $news[] = [
                 'id'    => $i,
