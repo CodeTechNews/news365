@@ -129,8 +129,10 @@ class NewsController extends Controller
             case "inter":
                 // $this->BuscarNegocios("hamburguesas playa del carmen");
                 // die;
-                $articulos = $this->LeerAPI($domain . '/news/world/bbcmundo.json', "es", $i);
-                return $articulos;
+                $articulos1 = $this->LeerAPI($domain . '/news/world/bbcmundo.json', "es", $i);
+                $i = count($articulos1);
+                $articulos2 = $this->LeerAPI($domain . '/news/world/caracol.json', "es", $i);
+                return array_merge($articulos1, $articulos2);
                 break;    
             case "pol":
                 // $this->BuscarNegocios("hamburguesas playa del carmen");
@@ -325,27 +327,32 @@ class NewsController extends Controller
 
     private function LeerAPI($rute, $language, $i){
         //dump($url);die;
-      
-        $response = Http::get($rute)->json();
-
-        foreach($response as $item){
-            //$title = $item['title'];
-            $title =  ($language == "en") ? GoogleTranslate::trans($item['title'], 'es') : $item['title'];
-             
-            //dump($item['img']); 
-           
-            $imagen = ($item['img'] == null) ? "img/news365.png" : $item['img'];
-            
-            $news[] = [
-                'id'    => $i,
-                'image' => $imagen,
-                'text' => $title, //substr($texto,0,100) . '...',
-                'href'=> $item['url'],
-                'lang' => $language
-            ];
-            $i++;
+        
+        try {
+            $response = Http::get($rute)->json();//code...
+            foreach($response as $item){
+                //$title = $item['title'];
+                $title =  ($language == "en") ? GoogleTranslate::trans($item['title'], 'es') : $item['title'];
+                 
+                //dump($item['img']); 
+               
+                $imagen = ($item['img'] == null) ? "img/news365.png" : $item['img'];
+                
+                $news[] = [
+                    'id'    => $i,
+                    'image' => $imagen,
+                    'text' => $title, //substr($texto,0,100) . '...',
+                    'href'=> $item['url'],
+                    'lang' => $language
+                ];
+                $i++;
+            }
+        } catch (\Throwable $th) {
+            //echo 'error cargando noticias';
+            $news = [];//throw $th;
         }
-        //dump($news);die;
+        
+        //dump($news);
         return $news;
         //dump($response);
     }
