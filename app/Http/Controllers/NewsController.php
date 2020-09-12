@@ -112,7 +112,7 @@ class NewsController extends Controller
         $url = "";
         $filter = "";
         $language = "es";
-
+        $domain = "http://35.215.215.65";
 
         switch ($news) {
             case "tech":
@@ -121,15 +121,14 @@ class NewsController extends Controller
                 $language = "en";
                 $articulos1 = $this->LeerRSS('https://www.theverge.com/rss/index.xml', $language);
                 $i = count($articulos1);
-                $articulos2 = $this->LeerAPI('https://app.scrapinghub.com/api/v2/datasets/JuCzQQh2IGh/download?format=json', "es", $i);
+                $articulos2 = $this->LeerAPI($domain .'/news/tech/techxataka.json', "es", $i);
                 return array_merge($articulos1, $articulos2);
                 //dump($this->LeerRSS('https://www.theverge.com/rss/index.xml',$language));
-                die;
+                //die;
                 break;
             case "inter":
                 // $this->BuscarNegocios("hamburguesas playa del carmen");
                 // die;
-                $domain = "http://35.215.215.65";
                 $articulos = $this->LeerAPI($domain . '/news/world/bbcmundo.json', "es", $i);
                 return $articulos;
                 break;    
@@ -329,20 +328,17 @@ class NewsController extends Controller
       
         $response = Http::get($rute)->json();
 
-        
-        $imagen = "img/news365.png";
         foreach($response as $item){
-            $title = $item['title'];
-            if ($language == "en") {
-                $title = GoogleTranslate::trans($title, 'es');
-            }
+            //$title = $item['title'];
+            $title =  ($language == "en") ? GoogleTranslate::trans($item['title'], 'es') : $item['title'];
+             
             //dump($item['img']); 
-            if ($item['img'] == "null"){
-                $imagen = $item['img'];
-            }
+           
+            $imagen = ($item['img'] == null) ? "img/news365.png" : $item['img'];
+            
             $news[] = [
                 'id'    => $i,
-                'image' => $item['img'],
+                'image' => $imagen,
                 'text' => $title, //substr($texto,0,100) . '...',
                 'href'=> $item['url'],
                 'lang' => $language
@@ -453,7 +449,7 @@ class NewsController extends Controller
                 $title = explode('"',$item->title)[0];  //extrae el titulo
 
                 if ($language == "en") {
-                    $title = GoogleTranslate::trans($title, 'es');
+                   $title = GoogleTranslate::trans($title, 'es');
                 }
                 //dump($title);die;
     
