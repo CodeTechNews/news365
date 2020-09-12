@@ -131,13 +131,16 @@ class NewsController extends Controller
                 // die;
                 $articulos1 = $this->LeerAPI($domain . '/news/world/bbcmundo.json', "es", $i);
                 $i = count($articulos1);
-                $articulos2 = $this->LeerAPI($domain . '/news/world/caracol.json', "es", $i);
+                $articulos2 = $this->LeerAPI($domain . '/news/world1/caracol.json', "es", $i);
                 return array_merge($articulos1, $articulos2);
                 break;    
             case "pol":
                 // $this->BuscarNegocios("hamburguesas playa del carmen");
                 // die;
-                return $news=[];
+                $articulos1 = $this->LeerAPI($domain . '/news/politica/caracolpolit.json', "es", $i);
+                $i = count($articulos1);
+                $articulos2 = $this->LeerAPI($domain . '/news/politica1/bbcpolit.json', "es", $i);
+                return array_merge($articulos1, $articulos2);
                 break;
             case "fin":
                 $url = "https://finviz.com/news.ashx";
