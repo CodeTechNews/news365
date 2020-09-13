@@ -64,47 +64,7 @@
                 </div>
         </div>
     </nav>
-    <div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-        {
-        "symbols": [
-        {
-            "proName": "FOREXCOM:SPXUSD",
-            "title": "S&P 500"
-        },
-        {
-            "proName": "FOREXCOM:NSXUSD",
-            "title": "Nasdaq 100"
-        },
-        {
-            "proName": "FX_IDC:EURUSD",
-            "title": "EUR/USD"
-        },
-        {
-            "proName": "BITSTAMP:BTCUSD",
-            "title": "BTC/USD"
-        },
-        {
-            "description": "IGV",
-            "proName": "AMEX:IGV"
-        },
-        {
-            "description": "VOO",
-            "proName": "AMEX:VOO"
-        },
-        {
-            "description": "BUI",
-            "proName": "BUI"
-        }
-        ],
-            "colorTheme": "dark",
-            "isTransparent": false,
-            "displayMode": "adaptive",
-            "locale": "es"
-        }
-        </script>
-        </div>
-        <!-- TradingView Widget END -->
+    
     @yield('content')
     <script>
     //Get the button
