@@ -4,10 +4,11 @@
 
 
     <div class="container mx-auto px-4 pt-2">
-        <marquee scrollamount="10">Bienvendos al portal de noticias 365</marquee>
+        <!-- <marquee scrollamount="10">Bienvendos al portal de noticias 365</marquee> -->
+        
         <div class="popular-news">
             <h2 class="uppercase tracking-wider text-orange-500 text-lg font-semibold">
-                Popular News
+                Populares
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3   lg:grid-cols-5 gap-8">
                 @foreach($resultados as $resultado)

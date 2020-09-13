@@ -286,17 +286,22 @@ class NewsController extends Controller
     }
 
     private function buscar_noticia_2($url_noticia, $language){
-        
-        //$path = "http://example.com/some-article.html";
-        $data = file_get_contents($url_noticia);
 
-        # code
-        $ae = new PhpBoilerPipe\ArticleExtractor();
-        $texto = $ae->getContent($data) . "<br><br><br><br><br><br>";
-        //$traducido = $texto;
-        if ($language == "en") {
-            $texto = GoogleTranslate::trans($texto, 'es');
+        try {
+
+            $data = file_get_contents($url_noticia);
+
+            # code
+            $ae = new PhpBoilerPipe\ArticleExtractor();
+            $texto = $ae->getContent($data) . "<br><br><br><br><br><br>";
+            //$traducido = $texto;
+            if ($language == "en") {
+                $texto = GoogleTranslate::trans($texto, 'es');
+            }
+        } catch (\Throwable $th) {
+            $traducido = $texto;
         }
+        
         return $texto;
 
     }
