@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "abd06e6b4d1f4f21495c03feb2046cb8",
+    "content-hash": "f9a11d87163fe4b90c77721c8c8cb393",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -352,6 +352,50 @@
                 }
             ],
             "time": "2020-05-25T17:44:05+00:00"
+        },
+        {
+            "name": "dotpack/php-boiler-pipe",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dotpack/php-boiler-pipe.git",
+                "reference": "0acfea6f643bc970731e4327f037b197caa0e71f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dotpack/php-boiler-pipe/zipball/0acfea6f643bc970731e4327f037b197caa0e71f",
+                "reference": "0acfea6f643bc970731e4327f037b197caa0e71f",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DotPack\\PhpBoilerPipe\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Kohlschütter",
+                    "email": "christian@kohlschutter.com"
+                },
+                {
+                    "name": "Ilia Ermolin",
+                    "email": "dotpack@gmail.com"
+                }
+            ],
+            "description": "PhpBoilerPipe. Boilerplate Removal and Fulltext Extraction from HTML pages",
+            "keywords": [
+                "extract",
+                "html"
+            ],
+            "time": "2016-09-21T10:36:35+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -6962,7 +7006,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "dotpack/php-boiler-pipe": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

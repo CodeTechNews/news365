@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2.5",
         "dg/rss-php": "^1.4",
+        "dotpack/php-boiler-pipe": "dev-master",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",

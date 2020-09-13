@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Goutte\Client;
 use PhpParser\Node\Stmt\TryCatch;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use DotPack\PhpBoilerPipe;
 
 
 class NewsController extends Controller
@@ -64,7 +65,7 @@ class NewsController extends Controller
         $noticia=[
             'imagen' => $request->query('image'),
             'titulo' => $titulo,
-            'texto' => $this->buscar_noticia($request->query('href'), $request->query('lang'))
+            'texto' => $this->buscar_noticia_2($request->query('href'), $request->query('lang'))
         ];
 
         //dd($noticia[0]['imagen']);die;
@@ -281,6 +282,22 @@ class NewsController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
+
+    }
+
+    private function buscar_noticia_2($url_noticia, $language){
+        
+        //$path = "http://example.com/some-article.html";
+        $data = file_get_contents($url_noticia);
+
+        # code
+        $ae = new PhpBoilerPipe\ArticleExtractor();
+        $texto = $ae->getContent($data) . "<br><br><br><br><br><br>";
+        //$traducido = $texto;
+        if ($language == "en") {
+            $texto = GoogleTranslate::trans($texto, 'es');
+        }
+        return $texto;
 
     }
 
