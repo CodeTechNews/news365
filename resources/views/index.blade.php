@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
+
     <!-- TradingView Widget BEGIN -->
     <script class="focus:outline-none " type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
     {
