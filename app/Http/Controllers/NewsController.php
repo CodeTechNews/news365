@@ -144,7 +144,7 @@ class NewsController extends Controller
                 return array_merge($articulos1, $articulos2);
                 break;
             case "fin":
-                $url = "https://es.finance.yahoo.com/";
+                $url = "https://es-us.finanzas.yahoo.com/";
                 $filter = '//*[@id="slingstoneStream-0-Stream"]/ul/li';
                 $language = "es";
                 $articulos1 =  $this->buscar_noticias_fin($url, $filter, $language );
