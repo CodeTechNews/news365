@@ -144,11 +144,16 @@ class NewsController extends Controller
                 return array_merge($articulos1, $articulos2);
                 break;
             case "fin":
+                $url = "https://es.finance.yahoo.com/";
+                $filter = '//*[@id="slingstoneStream-0-Stream"]/ul/li';
+                $language = "es";
+                $articulos1 =  $this->buscar_noticias_fin($url, $filter, $language );
+                $i = count($articulos1);
                 $url = "https://finviz.com/news.ashx";
                 $filter = '.content > div > div > div > table > tr > td > table > tr > td > a';
-                ///html/body/div[2]/div/div/div/table/tbody/tr[2]/td[1]/table/tbody/tr[1]
                 $language = "en";
-                return $this->buscar_noticias($url, $filter, $language );
+                $articulos2 =  $this->buscar_noticias($url, $filter, $language, $i );
+                return array_merge($articulos1, $articulos2);
                 break;
             default:
                 $url = "https://www.noticias24.com/";
@@ -230,10 +235,97 @@ class NewsController extends Controller
 
     }
 
-    private function buscar_noticias($url, $filter, $language ){
+    private function buscar_noticias_fin($url, $filter, $language ){
 
         $crawler = $this->scraping_url($url);
         $i = 0;
+        $this->news = [];
+        //echo $filter; 
+        //dump($crawler->filter('body')->children('li'));
+        //die;
+
+        $crawler->filterXPath($filter)->each(function ($node) use (&$i, &$language, &$url) {
+        
+            $texto = $node->html();
+            
+            
+            //dump($texto);die;
+
+            //$link = $node->filter('a')->attr('href');
+            //$imagen = "/img/news365.png";
+            
+            
+            //echo $texto . "<br>" ;
+            //echo 'nuevo' . "<br>";
+            //echo $link . "<br>";
+            //die;
+            if ($i == 0) {
+                $imagen = $node->filter('div > a > img')->attr('src');
+                $texto = $node->filter('div > a > img')->attr('alt');
+                $link = $url . $node->filter('div > a')->attr('href');
+                $link = (substr($link,0,1) == '/') ? $url . $link : $link;
+                $this->news[] = [
+                    'id'    => $i,
+                    'image' => $imagen,
+                    'text' => $texto,
+                    'href'=> $link, 
+                    'lang' => $language
+                ];
+                $i++;
+                $node->filter('div > ul > li')->each(function ($node) use (&$i, &$language, &$url) {
+                    $imagen = $node->filter('a > div > img')->attr('src');
+                    $texto = $node->filter('a > div > img')->attr('alt');
+                    $link =  $node->filter('a')->attr('href');
+                    $link = (substr($link,0,1) == '/') ? $url . $link : $link;
+                    $this->news[] = [
+                        'id'    => $i,
+                        'image' => $imagen,
+                        'text' => $texto,
+                        'href'=> $link, 
+                        'lang' => $language
+                    ];
+                    $i++;
+                });
+            } else {
+                $imagen = $node->filter('div > div > div > img')->attr('src');
+                $texto = $node->filter('div > div > div > img')->attr('alt');
+                $link = $node->filter('div > div > h3 > a')->attr('href');
+                $link = (substr($link,0,1) == '/') ? $url . $link : $link;;
+                $this->news[] = [
+                    'id'    => $i,
+                    'image' => $imagen,
+                    'text' => $texto,
+                    'href'=> $link, 
+                    'lang' => $language
+                ];
+                //dump($this->news);die;
+                $i++;
+            }
+            
+            // $this->news[] = [
+            //     'id'    => $i,
+            //     'image' => $imagen,
+            //     'text' => $texto,
+            //     'href'=> $link, 
+            //     'lang' => $language
+            // ];
+            //dump($this->news);die;
+            
+            //$image_content = file_get_contents($imagen);
+            //file_put_contents('images/' . $i . '.jpg', $image_content);
+            
+        });
+        //dump($this->news);die;
+        //die;
+        return $this->news;
+
+    }
+
+    private function buscar_noticias($url, $filter, $language, $i ){
+
+        $crawler = $this->scraping_url($url);
+        $this->news = [];
+        //$i = 0;
         //echo $filter; 
         //dump($crawler->filter($filter)->html());die;
 
@@ -290,7 +382,8 @@ class NewsController extends Controller
         try {
 
             $data = file_get_contents($url_noticia);
-
+            //$ae = new PhpBoilerPipe\HtmlContent($data);
+            //dump($ae);die;
             # code
             $ae = new PhpBoilerPipe\ArticleExtractor();
             $texto = $ae->getContent($data) . "<br><br><br><br><br><br>";
