@@ -332,11 +332,12 @@ class NewsController extends Controller
 
         $crawler = $this->scraping_url($url);
         $this->news = [];
+        $conteo = 1;
         //$i = 0;
         //echo $filter; 
         //dump($crawler->filter($filter)->html());die;
 
-        $crawler->filter($filter)->each(function ($node) use (&$i, &$language) {
+        $crawler->filter($filter)->each(function ($node) use (&$i, &$language, &$conteo) {
         
             
             $texto = $node->text();
@@ -355,14 +356,16 @@ class NewsController extends Controller
             // }
             // //$texto = $node->text();
             //$link =  $node->filter('a')->attr('href');
-            $this->news[] = [
-                'id'    => $i,
-                'image' => $imagen,
-                'text' => $texto, //substr($texto,0,100) . '...',
-                'href'=> $link,
-                'lang' => $language
-            ];
-        
+            if ($conteo <= 10){
+                $this->news[] = [
+                    'id'    => $i,
+                    'image' => $imagen,
+                    'text' => ($language = 'en') ? GoogleTranslate::trans($texto, 'es') :  $texto, 
+                    'href'=> $link,
+                    'lang' => $language
+                ];
+                $conteo++;
+            }
             
             //$image_content = file_get_contents($imagen);
             //file_put_contents('images/' . $i . '.jpg', $image_content);
