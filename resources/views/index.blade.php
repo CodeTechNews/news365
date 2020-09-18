@@ -56,7 +56,7 @@
                 @foreach($resultados as $resultado)
                     <div class="mt-8">
                         <a href="{{ route('news.show', $resultado) }}" target="_blank">
-                            <img src="{{$resultado['image']}}" alt="parasite" class="hover:opacity-75 transition ease-in-out duration-150 h-32 sm:h-48 w-full object-cover" >
+                            <img src="{{$resultado['image']}}" alt="news365" class="hover:opacity-75 transition ease-in-out duration-150 h-32 sm:h-48 w-full object-cover" >
                             
                         </a>
                         <div class="div mt-2">

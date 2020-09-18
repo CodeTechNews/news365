@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9a11d87163fe4b90c77721c8c8cb393",
+    "content-hash": "8a8c596f752e5396f1ff58ad685ec102",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -883,6 +883,72 @@
                 "url"
             ],
             "time": "2019-07-01T23:21:34+00:00"
+        },
+        {
+            "name": "laracrafts/laravel-url-shortener",
+            "version": "v0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LaraCrafts/laravel-url-shortener.git",
+                "reference": "aa0fd5949b0bc15930d94438d065d69a80abddda"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LaraCrafts/laravel-url-shortener/zipball/aa0fd5949b0bc15930d94438d065d69a80abddda",
+                "reference": "aa0fd5949b0bc15930d94438d065d69a80abddda",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.2",
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.4",
+                "illuminate/support": "^5.1 || ^6.0 || ^7.0",
+                "php": "^7.1",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "illuminate/routing": "^5.1 || ^6.0 || ^7.0",
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "\\LaraCrafts\\UrlShortener\\UrlShortenerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LaraCrafts\\UrlShortener\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Choraimy Kroonstuiver",
+                    "homepage": "https://github.com/axlon"
+                },
+                {
+                    "name": "László Görög",
+                    "email": "contact@nergal.xyz"
+                }
+            ],
+            "description": "Powerful URL shortening tools in Laravel",
+            "keywords": [
+                "bit.ly",
+                "laravel",
+                "lumen",
+                "shorte.st",
+                "shortener",
+                "shortening",
+                "tinyurl",
+                "url"
+            ],
+            "time": "2020-03-03T20:09:14+00:00"
         },
         {
             "name": "laravel/framework",

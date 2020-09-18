@@ -8,6 +8,9 @@ use Goutte\Client;
 use PhpParser\Node\Stmt\TryCatch;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use DotPack\PhpBoilerPipe;
+use Illuminate\Support\Optional;
+use LaraCrafts\UrlShortener\UrlShortenerManager;
+use LaraCrafts\UrlShortener\Http\ShorteStShortener;
 
 
 class NewsController extends Controller
@@ -56,6 +59,8 @@ class NewsController extends Controller
     public function show(Request $request)
     {
         
+        $link = $this->shortURL($request->fullUrl());
+        //dump($link);die;
         $titulo = $request->query('text');
         $language = $request->query('lang');
         if ($language == "en") {
@@ -65,7 +70,8 @@ class NewsController extends Controller
         $noticia=[
             'imagen' => $request->query('image'),
             'titulo' => $titulo,
-            'texto' => $this->buscar_noticia_2($request->query('href'), $request->query('lang'))
+            'texto' => $this->buscar_noticia_2($request->query('href'), $request->query('lang')),
+            'href'=> $link
         ];
 
         //dd($noticia[0]['imagen']);die;
@@ -144,6 +150,7 @@ class NewsController extends Controller
                 return array_merge($articulos1, $articulos2);
                 break;
             case "fin":
+                //$this->shortURL('http://35.215.215.65/news/7?image=https%3A%2F%2Fs.yimg.com%2Fuu%2Fapi%2Fres%2F1.2%2FPd_Tfy79cSjUeidQFYWsEA--~B%2FZmk9c3RyaW07aD0xMjM7cT04MDt3PTIyMDthcHBpZD15dGFjaHlvbg--%2Fhttps%3A%2F%2Fs.yimg.com%2Fuu%2Fapi%2Fres%2F1.2%2F3IJwwjP8HfJK1LHOlz4osA--~B%2FaD0xMzA2O3c9MTMwNjthcHBpZD15dGFjaHlvbg--%2Fhttps%3A%2F%2Fmedia.zenfs.com%2Fes%2Fefe.es%2Ff261772c16e097412cac439b9cfbaf19.cf.jpg&text=Apple%20presenta%20nuevo%20reloj%20inteligente%20que%20mide%20el%20nivel%20de%20ox%C3%ADgeno%20en%20sangre&href=https%3A%2F%2Fes-us.finanzas.yahoo.com%2Fnoticias%2Fapple-presenta-reloj-inteligente-mide-183739297.html&lang=es');
                 $url = "https://es-us.finanzas.yahoo.com";
                 $filter = '//*[@id="slingstoneStream-0-Stream"]/ul/li';
                 $language = "es";
@@ -385,6 +392,14 @@ class NewsController extends Controller
             throw $th;
         }
 
+    }
+
+    private function shortURL($url){
+                
+        $shortener = new UrlShortenerManager(app());
+        //$corta = $shortener->shorten('www.google.com');
+        $corta = $shortener->shorten($url);
+        return $corta;
     }
 
     private function buscar_noticia_2($url_noticia, $language){
