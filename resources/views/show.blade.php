@@ -21,7 +21,7 @@
         <div class="container mx-auto px-4 py-16 flex flex-col md:flex-row">
             <img src="{{$noticia['imagen']}}" alt="" class=" sm:h-full md:h-32 lg:h-64  object-cover" >
             <div class="md:ml-24 lg:ml-10">            
-            <div class="mt-4 addthis_inline_share_toolbox_hesj" data-url="{{ $noticia['href'] }}" data-title="{{ $noticia['titulo'] }}"></div>
+            <div class="mt-4 addthis_inline_share_toolbox_hesj" data-url="{{ $noticia['href'] }}" data-title="{{ $noticia['titulo'] }}" data-media="{{ $noticia['imagen'] }}"></div>
 
                 <h2 class="text-3xl font-semibold">{{ $noticia['titulo'] }}</h2>
 
