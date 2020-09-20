@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News365</title>
-    <link rel="icon" href="img/News365.png">
+    <link rel="icon" href="/img/News365.png">
     <link rel="stylesheet" href="/css/main.css">
 </head>
 

@@ -83,3 +83,12 @@ $url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyBTy
             //     dump($node);
             // });
             // die;
+
+
+'https://www.google.com/search?q=venezuela&hl=ja&source=lnt&tbs=cdr%3A1%2Ccd_min%3A2020%2Ccd_max%3A2020&tbm=nws&start=10'
+
+
+http://news.google.com/news?q=covid-19&hl=es&sort=date&gl=US&start=0&num=10&output=rss
+
+
+

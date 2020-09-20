@@ -25,17 +25,21 @@
 
                 <h2 class="text-3xl font-semibold">{{ $noticia['titulo'] }}</h2>
 
-                <button class="mt-8 mr-5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline" onclick="responsiveVoice.speak(document.getElementById('articulo-extraido').textContent ,'Spanish Latin American Female',{rate: 1.05});">🔊 Léelo </button>
+                <button class="mt-8 mr-5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline" onclick="responsiveVoice.speak(document.getElementById('articulo-extraido').textContent ,'Spanish',{rate: 1.05});">🔊 Léelo </button>
 
                 <!-- Go to www.addthis.com/dashboard to customize your tools -->
                 
             
 
-                <p id="articulo-extraido" class="text-gray-500 mt-8 font-mono font-hairline text-xl">
+                <div class="text-gray-500 mt-8 font-mono font-hairline text-xl">
 
+                    <p id="articulo-extraido">
                     {!! $noticia['texto'] !!}
-    
-                </p>
+                    
+
+                    <br><br><br><br>
+                    </p>
+                </div>
             </div>
         </div>
         <div id="footer">
