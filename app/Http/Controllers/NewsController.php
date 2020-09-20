@@ -161,16 +161,25 @@ class NewsController extends Controller
                 return array_merge($articulos1, $articulos2);
                 break;
             case "fin":
+                $i=0;
+                $url = "https://news.bit2me.com";
+                $language = "es";
+                $articulos1 =  $this->json_noticias_wpapi($url, $language, $i);
+                $i += count($articulos1);
+                $url = "https://bitfinanzas.com";
+                $language = "es";
+                $articulos2 =  $this->json_noticias_wpapi($url, $language, $i);
+                $i += count($articulos2);
                 $url = "https://es-us.finanzas.yahoo.com";
                 $filter = '//*[@id="slingstoneStream-0-Stream"]/ul/li';
                 $language = "es";
-                $articulos1 =  $this->buscar_noticias_fin($url, $filter, $language );
-                $i = count($articulos1);
+                $articulos3 =  $this->buscar_noticias_fin($url, $filter, $language, $i );
+                $i += count($articulos3);
                 $url = "https://finviz.com/news.ashx";
                 $filter = '.content > div > div > div > table > tr > td > table > tr > td > a';
                 $language = "en";
-                $articulos2 =  $this->buscar_noticias($url, $filter, $language, $i );
-                return array_merge($articulos1, $articulos2);
+                $articulos4 =  $this->buscar_noticias($url, $filter, $language, $i );
+                return array_merge($articulos1, $articulos2, $articulos3, $articulos4);
                 break;
             default:
                 $url = "https://www.noticias24.com/";
@@ -248,14 +257,44 @@ class NewsController extends Controller
         return $this->news;
     }
 
-    private function json_noticias(){
+    private function json_noticias_wpapi($url, $language, $i){
+        try {
+            $url = $url . "/wp-json/wp/v2/posts?_embed";
+            $response = Http::get($url)->json();
+            foreach($response as $item){
 
+                //dump($item);
+                $title = $item['title']['rendered'];
+                $imagen = $item['_embedded']['wp:featuredmedia'][0]['media_details']['sizes']['full']['source_url'];
+                //dump($imagen);die;
+                //$title =  ($language == "en") ? GoogleTranslate::trans($item['title'], 'es') : $item['title'];
+                 
+                //dump($imagen);die; 
+               
+                $imagen = ($imagen== null) ? "img/news365.png" : $imagen;
+                
+                $news[] = [
+                    'id'    => $i,
+                    'image' => $imagen,
+                    'text' => $title, //substr($texto,0,100) . '...',
+                    'href'=> $item['link'],
+                    'lang' => $language
+                ];
+                $i++;
+            }
+        } catch (\Throwable $th) {
+            //echo 'error cargando noticias';
+            $news = [];//throw $th;
+        }
+        
+        //dump($news);
+        return $news;
     }
 
-    private function buscar_noticias_fin($url, $filter, $language ){
+    private function buscar_noticias_fin($url, $filter, $language, $i ){
 
         
-        $i = 0;
+        $ii = $i;
         $this->news = [];
         //$url = "https://es.finanzas.yahoo.com/";
         //echo $filter; 
@@ -263,7 +302,7 @@ class NewsController extends Controller
         //die;
         try {
             $crawler = $this->scraping_url($url);
-            $crawler->filterXPath($filter)->each(function ($node) use (&$i, &$language, &$url) {
+            $crawler->filterXPath($filter)->each(function ($node) use (&$ii, &$i, &$language, &$url) {
             
                 //$texto = $node->html();
                 
@@ -278,7 +317,7 @@ class NewsController extends Controller
                 //echo 'nuevo' . "<br>";
                 //echo $link . "<br>";
                 //die;
-                if ($i == 0) {
+                if ($i == $ii) {
                     $imagen = $node->filter('div > a > img')->attr('src');
                     $texto = $node->filter('div > a > img')->attr('alt');
                     $link = $node->filter('div > a')->attr('href');
@@ -373,7 +412,7 @@ class NewsController extends Controller
             // }
             // //$texto = $node->text();
             //$link =  $node->filter('a')->attr('href');
-            if ($conteo <= 10){
+            if ($conteo <= 3){
                 $this->news[] = [
                     'id'    => $i,
                     'image' => $imagen,
